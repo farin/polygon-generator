@@ -24,6 +24,12 @@ public class PolygonEditor extends JLabel {
                 if (e.getButton() == MouseEvent.BUTTON1) {
                     int x = (int) (e.getX()*(NORMALIZED_SIZE/(double)EDITOR_SIZE));
                     int y = (int) (e.getY()*(NORMALIZED_SIZE/(double)EDITOR_SIZE));
+                    if (e.isControlDown()) {
+                        if (x < 16) x = 0;
+                        if (x > NORMALIZED_SIZE - 16) x = NORMALIZED_SIZE-1;
+                        if (y < 16) y = 0;
+                        if (y > NORMALIZED_SIZE - 16) y = NORMALIZED_SIZE-1;
+                    }
                     app.getPointPanel().addPoint(new Point(x, y));
                 }
                 if (e.getButton() == MouseEvent.BUTTON3) {
