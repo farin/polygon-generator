@@ -6,8 +6,6 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JLabel;
 
-import com.jcloisterzone.ui.ImmutablePoint;
-
 
 public class PolygonEditor extends JLabel {
     private static final long serialVersionUID = -7132962466963671431L;
@@ -26,7 +24,7 @@ public class PolygonEditor extends JLabel {
                 if (e.getButton() == MouseEvent.BUTTON1) {
                     int x = (int) (e.getX()*(NORMALIZED_SIZE/(double)EDITOR_SIZE));
                     int y = (int) (e.getY()*(NORMALIZED_SIZE/(double)EDITOR_SIZE));
-                    app.getPointPanel().addPoint(new ImmutablePoint(x, y));
+                    app.getPointPanel().addPoint(new Point(x, y));
                 }
                 if (e.getButton() == MouseEvent.BUTTON3) {
                     app.getPointPanel().removeLastPoint();
@@ -40,7 +38,7 @@ public class PolygonEditor extends JLabel {
         super.paint(g);
         g.setColor(Color.RED);
         int idx = 0;
-        for (ImmutablePoint p : app.getPointPanel().getPoints()) {
+        for (Point p : app.getPointPanel().getPoints()) {
             int x = (int) (p.getX() * EDITOR_SIZE/NORMALIZED_SIZE);
             int y = (int) (p.getY() * EDITOR_SIZE/NORMALIZED_SIZE);
             g.setColor((idx % 2) == 0 ? Color.RED : Color.BLUE);

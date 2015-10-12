@@ -6,13 +6,11 @@ import java.util.regex.Pattern;
 
 import javax.swing.SwingUtilities;
 
-import com.jcloisterzone.ui.ImmutablePoint;
-
 
 
 public class Points {
 
-    private List<ImmutablePoint> points = new ArrayList<ImmutablePoint>();
+    private List<Point> points = new ArrayList<Point>();
     private final PolygonGenerator app;
     private String currentValue = "";
 
@@ -20,7 +18,7 @@ public class Points {
         this.app = app;
     }
 
-    public List<ImmutablePoint> getPoints() {
+    public List<Point> getPoints() {
         return points;
     }
 
@@ -29,7 +27,7 @@ public class Points {
         app.refresh(true);
     }
 
-    public void addPoint(ImmutablePoint point) {
+    public void addPoint(Point point) {
         points.add(point);
         app.refresh(true);
     }
@@ -45,7 +43,7 @@ public class Points {
         s.append("<svg:polygon points=\"");
 
         boolean first = true;
-        for (ImmutablePoint p : points) {
+        for (Point p : points) {
             if (!first) {
                 s.append(" ");
             }
@@ -65,11 +63,11 @@ public class Points {
         Pattern p = Pattern.compile("\\s*<svg:polygon points=\"((\\d+,\\d+\\s?)*)\"/>\\s*");
         Matcher m = p.matcher(text);
         if (m.matches()) {
-            List<ImmutablePoint> points = new ArrayList<ImmutablePoint>();
+            List<Point> points = new ArrayList<Point>();
             String[] pointsStr = m.group(1).split("\\s");
             for (String tok : pointsStr) {
                 String[] xy = tok.split(",");
-                points.add(new ImmutablePoint(Integer.parseInt(xy[0]), Integer.parseInt(xy[1])));
+                points.add(new Point(Integer.parseInt(xy[0]), Integer.parseInt(xy[1])));
             }
             this.points = points;
             SwingUtilities.invokeLater(new Runnable() {

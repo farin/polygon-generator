@@ -90,6 +90,47 @@ public class PolygonGenerator extends JFrame {
         });
         getContentPane().add(clear);
 
+        JButton up = new JButton("^");
+        up.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                for (Point p : points.getPoints()) {
+                    p.y -= 1;
+                }
+                refresh(true);
+            }
+        });
+        getContentPane().add(up);
+        JButton down = new JButton("v");
+        down.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                for (Point p : points.getPoints()) {
+                    p.y += 1;
+                }
+                refresh(true);
+            }
+        });
+        getContentPane().add(down);
+        JButton left = new JButton("<");
+        left.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                for (Point p : points.getPoints()) {
+                    p.x -= 1;
+                }
+                refresh(true);
+            }
+        });
+        getContentPane().add(left);
+        JButton right = new JButton(">");
+        right.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                for (Point p : points.getPoints()) {
+                    p.x += 1;
+                }
+                refresh(true);
+            }
+        });
+        getContentPane().add(right);
+
         points = new Points(this);
 
         getContentPane().add(xmlDef);

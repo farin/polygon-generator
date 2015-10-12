@@ -7,8 +7,6 @@ import java.awt.Polygon;
 
 import javax.swing.JLabel;
 
-import com.jcloisterzone.ui.ImmutablePoint;
-
 /*
  * Created on 7.11.2004
  *
@@ -36,7 +34,7 @@ public class Preview extends JLabel {
         if (app.getPointPanel().getPoints().size() > 2) {
             Graphics2D g2 = (Graphics2D) g;
             Polygon poly = new Polygon();
-            for (ImmutablePoint p : app.getPointPanel().getPoints()) {
+            for (Point p : app.getPointPanel().getPoints()) {
                 int x = (int) (p.getX() * PolygonGenerator.PREVIEW_SIZE/(double)PolygonEditor.NORMALIZED_SIZE);
                 int y = (int) (p.getY() * PolygonGenerator.PREVIEW_SIZE/(double)PolygonEditor.NORMALIZED_SIZE);
                 poly.addPoint(x, y);

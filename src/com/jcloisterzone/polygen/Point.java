@@ -1,22 +1,18 @@
-package com.jcloisterzone.ui;
+package com.jcloisterzone.polygen;
 
 import com.jcloisterzone.board.Rotation;
 
 //import java.util.WeakHashMap;
 
-public class ImmutablePoint {
+public class Point {
 
-    private final int x;
-    private final int y;
+    int x;
+    int y;
 
-    public ImmutablePoint(int x, int y) {
+    public Point(int x, int y) {
         this.x = x;
         this.y = y;
     }
-
-    /*static public ImmutablePoint newInstance(int x, int y) {
-        return new ImmutablePoint(x,y);
-    }*/
 
     public int getX() {
         return x;
@@ -26,16 +22,16 @@ public class ImmutablePoint {
         return y;
     }
 
-    public ImmutablePoint scale(int squareSize) {
+    public Point scale(int squareSize) {
         return scale(squareSize, 0, 0);
     }
 
-    public ImmutablePoint scale(int squareSize, int boxSize) {
+    public Point scale(int squareSize, int boxSize) {
         return scale(squareSize, boxSize,boxSize);
     }
 
-    public ImmutablePoint scale(int squareSize, int xSize, int ySize) {
-        return new ImmutablePoint(
+    public Point scale(int squareSize, int xSize, int ySize) {
+        return new Point(
                 (int) (squareSize * (x / 100.0))
                     - xSize / 2,
 
@@ -43,14 +39,14 @@ public class ImmutablePoint {
                     - ySize / 2);
     }
 
-    public ImmutablePoint mirrorX() {
-        return new ImmutablePoint(100-x,y);
+    public Point mirrorX() {
+        return new Point(100-x,y);
     }
-    public ImmutablePoint mirrorY() {
-        return new ImmutablePoint(x,100-y);
+    public Point mirrorY() {
+        return new Point(x,100-y);
     }
-    public ImmutablePoint rotate() {
-        return new ImmutablePoint(100-y,x);
+    public Point rotate() {
+        return new Point(100-y,x);
     }
 
     /**
@@ -59,29 +55,29 @@ public class ImmutablePoint {
      * @param d how roatate
      * @return rotated ImmutablePoint
      */
-    public ImmutablePoint rotate100(Rotation r) {
+    public Point rotate100(Rotation r) {
         int x = this.x, y = this.y, _y;
         for (int i = 0; i < r.ordinal(); i++) {
             _y = y;
             y = x;
             x  = 100-_y;
         }
-        return new ImmutablePoint(x, y);
+        return new Point(x, y);
     }
 
     /**Rotate around [0,0]*/
-    public ImmutablePoint rotate(Rotation r) {
+    public Point rotate(Rotation r) {
         int x = this.x, y = this.y, _y;
         for (int i = 0; i < r.ordinal(); i++) {
             _y = y;
             y = x;
             x  = -_y;
         }
-        return new ImmutablePoint(x, y);
+        return new Point(x, y);
     }
 
-    public ImmutablePoint translate(int dx, int dy) {
-        return new ImmutablePoint(x + dx, y + dy);
+    public Point translate(int dx, int dy) {
+        return new Point(x + dx, y + dy);
     }
 
     @Override
@@ -90,8 +86,8 @@ public class ImmutablePoint {
     }
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof ImmutablePoint) {
-            ImmutablePoint p = (ImmutablePoint)obj;
+        if (obj instanceof Point) {
+            Point p = (Point)obj;
             return (x == p.x) && (y == p.y);
         }
         return false;
