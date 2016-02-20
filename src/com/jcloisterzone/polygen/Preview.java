@@ -20,6 +20,7 @@ import javax.swing.JLabel;
 public class Preview extends JLabel {
 
     private PolygonGenerator app;
+    private int offsetTop;
 
     private static final AlphaComposite AREA_ALPHA_COMPOSITE =
         AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .6f);
@@ -36,7 +37,7 @@ public class Preview extends JLabel {
             Polygon poly = new Polygon();
             for (Point p : app.getPointPanel().getPoints()) {
                 int x = (int) (p.getX() * PolygonGenerator.PREVIEW_SIZE/(double)PolygonEditor.NORMALIZED_SIZE);
-                int y = (int) (p.getY() * PolygonGenerator.PREVIEW_SIZE/(double)PolygonEditor.NORMALIZED_SIZE);
+                int y = (int) ((p.getY()) * PolygonGenerator.PREVIEW_SIZE/(double)PolygonEditor.NORMALIZED_SIZE) + offsetTop;
                 poly.addPoint(x, y);
             }
             g2.setColor(Color.RED);
@@ -44,4 +45,14 @@ public class Preview extends JLabel {
             g2.fill(poly);
         }
     }
+
+    public int getOffsetTop() {
+        return offsetTop;
+    }
+
+    public void setOffsetTop(int offsetTop) {
+        this.offsetTop = offsetTop;
+    }
+
+
 }

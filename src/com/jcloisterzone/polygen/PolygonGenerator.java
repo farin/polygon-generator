@@ -28,10 +28,11 @@ public class PolygonGenerator extends JFrame {
     private static final long serialVersionUID = -2934047702924373458L;
 
     //TODO read path from env
-    public static final String DEFAULT_PATH = "C:/Development/java/JCloisterZone/src/main/resources/plugins/winter/tiles";
+    public static final String DEFAULT_PATH = "C:/Development/java/JCloisterZone/src/main/resources/plugins/jcz/tiles/BA";
     public static final String TITLE = "Polygon Generator";
 
     public static final int PREVIEW_SIZE = 150;
+    public static final int OFFSET_TOP = 49;  // 0 for classic tiles, 49 for rect tiles
 
     private PolygonEditor editor;
     private Preview preview;
@@ -73,8 +74,25 @@ public class PolygonGenerator extends JFrame {
 
                 if (returnVal == JFileChooser.APPROVE_OPTION) {
                     file = fc.getSelectedFile();
-                    editor.setIcon(new ImageIcon(getImage(file, PolygonEditor.EDITOR_SIZE, Rotation.R0)));
-                    preview.setIcon(new ImageIcon(getImage(file, PREVIEW_SIZE, Rotation.R0)));
+                    ResizedImage ri = getImage(file, PolygonEditor.EDITOR_SIZE, Rotation.R0);
+                    ImageIcon editorIcon = new ImageIcon(ri.img);
+                    int w = editorIcon.getIconWidth();
+                    int h = editorIcon.getIconHeight();
+                    double ratio = (double)h/w;
+                    int offsetTop = OFFSET_TOP * w / ri.sourceWidth;
+                    editor.setPreferredSize(new Dimension(PolygonEditor.EDITOR_SIZE, (int)(PolygonEditor.EDITOR_SIZE*ratio)));
+                    editor.setIcon(editorIcon);
+                    editor.setOffsetTop(OFFSET_TOP * w / ri.sourceWidth);
+                    editor.setMaxY(PolygonEditor.NORMALIZED_SIZE * ri.sourceHeight / ri.sourceWidth);
+
+
+                    ri = getImage(file, PREVIEW_SIZE, Rotation.R0);
+                    ImageIcon previewIcon = new ImageIcon(ri.img);
+                    w = previewIcon.getIconWidth();
+                    h = previewIcon.getIconHeight();
+                    preview.setIcon(previewIcon);
+                    preview.setOffsetTop(OFFSET_TOP * w / ri.sourceWidth);
+                    preview.setPreferredSize(new Dimension(PREVIEW_SIZE, (int)(PREVIEW_SIZE*ratio)));
                     setTitle(TITLE + " - " + file.getName());
                 }
 
@@ -178,26 +196,38 @@ public class PolygonGenerator extends JFrame {
         return xmlDef;
     }
 
+    public static class ResizedImage {
+        public Image img;
+        public int sourceWidth;
+        public int sourceHeight;
+    }
 
-    private Image getImageWithoutTracking(File f, int size) {
+
+    private ResizedImage getImageWithoutTracking(File f, int width) {
         Image img = null;
         try {
             img = Toolkit.getDefaultToolkit().getImage(f.toURL());
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-        if (img.getWidth(null) != size) {
-            img = img.getScaledInstance(size, size, Image.SCALE_AREA_AVERAGING);
+        ResizedImage ri = new ResizedImage();
+
+        ri.img = (new ImageIcon(img)).getImage();
+        ri.sourceWidth = img.getWidth(null);
+        ri.sourceHeight = img.getHeight(null);
+
+        if (ri.sourceWidth != width) {
+            ri.img = img.getScaledInstance(width, width * ri.sourceHeight / ri.sourceWidth, Image.SCALE_AREA_AVERAGING);
         }
-        return img;
+        return ri;
     }
 
 
-    public Image getImage(File f, int size, Rotation rot) {
-        Image img = getImageWithoutTracking(f, size);
+    public ResizedImage getImage(File f, int width, Rotation rot) {
+        ResizedImage img = getImageWithoutTracking(f, width);
         try {
             MediaTracker tracker = new MediaTracker(editor);
-            tracker.addImage(img, 0);
+            tracker.addImage(img.img, 0);
             tracker.waitForID(0);
         } catch (Exception ex) {
             //do nothing
