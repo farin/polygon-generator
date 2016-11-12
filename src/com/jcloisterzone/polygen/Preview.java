@@ -19,7 +19,7 @@ import javax.swing.JLabel;
  */
 public class Preview extends JLabel {
 
-    private PolygonGenerator app;
+	private PolygonGenerator app;
     private int offsetTop;
 
     private static final AlphaComposite AREA_ALPHA_COMPOSITE =
@@ -37,7 +37,7 @@ public class Preview extends JLabel {
             Polygon poly = new Polygon();
             for (Point p : app.getPointPanel().getPoints()) {
                 int x = (int) (p.getX() * PolygonGenerator.PREVIEW_SIZE/(double)PolygonEditor.NORMALIZED_SIZE);
-                int y = (int) ((p.getY()) * PolygonGenerator.PREVIEW_SIZE/(double)PolygonEditor.NORMALIZED_SIZE) + offsetTop;
+                int y = (int) ((p.getY() + offsetTop) * PolygonGenerator.PREVIEW_SIZE/(double)PolygonEditor.NORMALIZED_SIZE);
                 poly.addPoint(x, y);
             }
             g2.setColor(Color.RED);

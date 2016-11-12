@@ -28,11 +28,12 @@ public class PolygonGenerator extends JFrame {
     private static final long serialVersionUID = -2934047702924373458L;
 
     //TODO read path from env
-    public static final String DEFAULT_PATH = "C:/Development/java/JCloisterZone/src/main/resources/plugins/jcz/tiles/BA";
+    //public static final String DEFAULT_PATH = "C:/Development/java/JCloisterZone/src/main/resources/plugins/jcz/tiles/BA";
+    public static final String DEFAULT_PATH = "/Users/farin/w/JCloisterZone/src/main/resources/plugins/jcz/tiles/BA";
     public static final String TITLE = "Polygon Generator";
 
     public static final int PREVIEW_SIZE = 150;
-    public static final int OFFSET_TOP = 49;  // 0 for classic tiles, 49 for rect tiles
+    public static final int OFFSET_TOP_3D = 49;  // 0 for classic tiles, 49 for rect tiles
 
     private PolygonEditor editor;
     private Preview preview;
@@ -78,12 +79,21 @@ public class PolygonGenerator extends JFrame {
                     ImageIcon editorIcon = new ImageIcon(ri.img);
                     int w = editorIcon.getIconWidth();
                     int h = editorIcon.getIconHeight();
-                    double ratio = (double)h/w;
-                    int offsetTop = OFFSET_TOP * w / ri.sourceWidth;
+                    double ratio = (double)ri.sourceHeight / ri.sourceWidth;
+                    //double scale = (double)PolygonEditor.NORMALIZED_SIZE / PolygonEditor.NORMALIZED_SIZE; 
+                    int baseOffsetTop;
+                    if (w == h) { //classic	
+                    	baseOffsetTop = 0;
+                    } else { //jcz
+                    	baseOffsetTop = OFFSET_TOP_3D;
+                    }                   
+                    double scale = (double)PolygonEditor.NORMALIZED_SIZE / ri.sourceWidth;
+                    int offsetTop = (int)(baseOffsetTop * scale);
+                    
                     editor.setPreferredSize(new Dimension(PolygonEditor.EDITOR_SIZE, (int)(PolygonEditor.EDITOR_SIZE*ratio)));
                     editor.setIcon(editorIcon);
-                    editor.setOffsetTop(OFFSET_TOP * w / ri.sourceWidth);
-                    editor.setMaxY(PolygonEditor.NORMALIZED_SIZE * ri.sourceHeight / ri.sourceWidth);
+                    editor.setOffsetTop(offsetTop);        
+                    editor.setMaxY((int) (PolygonEditor.NORMALIZED_SIZE * ratio));
 
 
                     ri = getImage(file, PREVIEW_SIZE, Rotation.R0);
@@ -91,7 +101,7 @@ public class PolygonGenerator extends JFrame {
                     w = previewIcon.getIconWidth();
                     h = previewIcon.getIconHeight();
                     preview.setIcon(previewIcon);
-                    preview.setOffsetTop(OFFSET_TOP * w / ri.sourceWidth);
+                    preview.setOffsetTop(offsetTop);
                     preview.setPreferredSize(new Dimension(PREVIEW_SIZE, (int)(PREVIEW_SIZE*ratio)));
                     setTitle(TITLE + " - " + file.getName());
                 }

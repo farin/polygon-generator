@@ -23,16 +23,17 @@ public class PolygonEditor extends JLabel {
         setOpaque(true);
         addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
-                if (e.getButton() == MouseEvent.BUTTON1) {
-                    int normalizedOffsetTop = offsetTop * NORMALIZED_SIZE / EDITOR_SIZE;
+                if (e.getButton() == MouseEvent.BUTTON1) {          
+                	System.out.println(e.getX() + ", "+e.getY());
                     int x = (int) (e.getX()*(NORMALIZED_SIZE/(double)EDITOR_SIZE));
-                    int y = (int) ((e.getY()- offsetTop)*(NORMALIZED_SIZE/(double)EDITOR_SIZE));
+                    int y = (int) (e.getY()*(NORMALIZED_SIZE/(double)EDITOR_SIZE)) - offsetTop;
+                    y -= (offsetTop != 0 ? 5 : 0); //HACK some error is in scaling, fix it here using magic constant
                     if (e.isControlDown()) {
                         if (Math.abs(x) < 16) x = 0;
                         if (x > NORMALIZED_SIZE - 16) x = NORMALIZED_SIZE-1;
                         if (Math.abs(y) < 16) y = 0;
-                        if (y < -normalizedOffsetTop + 16) y = -normalizedOffsetTop;
-                        if (y > maxY-normalizedOffsetTop-16) y = maxY-normalizedOffsetTop-1;
+                        if (y < -offsetTop + 16) y = -offsetTop;
+                        if (y > maxY-offsetTop-16) y = maxY-offsetTop-1;
                     }
                     app.getPointPanel().addPoint(new Point(x, y));
                 }
@@ -62,12 +63,13 @@ public class PolygonEditor extends JLabel {
     public void paint(Graphics g) {
         super.paint(g);
         g.setColor(Color.RED);
-        int idx = 0;
+        //int idx = 0;
         for (Point p : app.getPointPanel().getPoints()) {
             int x = (int) (p.getX() * EDITOR_SIZE/NORMALIZED_SIZE);
-            int y = (int) (p.getY() * EDITOR_SIZE/NORMALIZED_SIZE) + offsetTop;
-            g.setColor((idx % 2) == 0 ? Color.RED : Color.BLUE);
+            int y = (int) ((p.getY() + offsetTop) * EDITOR_SIZE/NORMALIZED_SIZE);
+            //g.setColor((idx % 2) == 0 ? Color.RED : Color.BLUE);
             g.fillRect(x-2,y-2,5,5);
+            //idx++;
         }
     }
 
